@@ -1,0 +1,111 @@
+{
+  "protocol": "artcube",
+  "inscription_type": "GENESIS_TITLE_ANCHOR",
+  "version": "1.1",
+  "record": {
+    "asset_id": "ARTCUBE-CENTAURS-0001",
+    "object_id_record_date": "2026-03-14"
+  },
+  "object_id_core": {
+    "type_of_object": "Sculpture",
+    "title": "Battle of the Centaurs",
+    "subject": "Mythological battle scene",
+    "date_or_period": {
+      "original_work": "c.1490\u20131492",
+      "silver_casting": "2022"
+    },
+    "maker": {
+      "original_artist": {
+        "name": "Michelangelo Buonarroti",
+        "role": "Original composition"
+      },
+      "contemporary_realization": {
+        "name": "UNKNOWN",
+        "role": "UNKNOWN"
+      }
+    },
+    "materials_and_techniques": {
+      "materials": [
+        {
+          "name": ".999 Fine Silver",
+          "confirmed": true
+        }
+      ],
+      "techniques": [
+        {
+          "name": "Lost-wax casting",
+          "confirmed": true
+        }
+      ]
+    },
+    "measurements": {
+      "dimensions_cm": {
+        "height": 80.0,
+        "width": 88.9,
+        "depth": 11.4
+      },
+      "weight_kg": 72.57
+    },
+    "production_details": {
+      "edition": "UNKNOWN",
+      "fabrication_notes": "Silver casting based on Michelangelo composition."
+    },
+    "inscriptions": "UNKNOWN",
+    "distinguishing_features": "Relief sculpture depicting intertwined centaurs and human figures in combat."
+  },
+  "ownership_at_genesis": {
+    "legal_owner_entity": {
+      "name": "UNKNOWN",
+      "jurisdiction": "UNKNOWN"
+    },
+    "physical_custodian": {
+      "name": "UNKNOWN",
+      "location": "UNKNOWN"
+    }
+  },
+  "legal_title_anchor": {
+    "title_anchor": true,
+    "governing_law": "Florida, United States",
+    "hybrid_transfer_rule": "Canonical title recognition requires both Genesis UTXO control alignment and a corresponding TITLE_EVENT.",
+    "statement": "This inscription serves as the canonical Bitcoin provenance and legal title anchor for the identified artwork."
+  },
+  "intellectual_property": {
+    "copyright": {
+      "status": "UNKNOWN"
+    },
+    "moral_rights": {
+      "waived": "UNKNOWN",
+      "attribution_required": "YES",
+      "integrity_rights_notes": null
+    },
+    "rights_grants": {
+      "baseline_policy": "BASELINE_DISPLAY_RIGHTS",
+      "granted_to_holder": {
+        "holder_scope": "ALIGNED_HOLDER",
+        "rights": [
+          "DISPLAY_NONCOMMERCIAL",
+          "EXHIBIT",
+          "PUBLISH_IMAGES_LOWRES"
+        ],
+        "status": "GRANTED",
+        "limitations": {
+          "territory": "WORLDWIDE",
+          "term": "DURATION_OF_LAWFUL_HOLDING",
+          "exclusivity": "NON_EXCLUSIVE",
+          "revocable": "NO",
+          "notes": "Expanded commercial rights require explicit IP events."
+        }
+      },
+      "not_granted_by_default": [
+        "PUBLISH_IMAGES_HIGHRES",
+        "REPRODUCE_PRINTS",
+        "MERCHANDISING",
+        "COMMERCIALIZE",
+        "CREATE_DERIVATIVES",
+        "AI_TRAINING_ALLOWED",
+        "AI_GENERATION_ALLOWED",
+        "SUBLICENSE"
+      ]
+    }
+  }
+}
