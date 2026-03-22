@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ArtworkLifecycleStatus {
+  DRAFT
+  METADATA_GENERATED
+  ARWEAVE_UPLOADED
+  INSCRIPTION_PENDING
+  ORDINAL_CREATED
+  SOLANA_BRIDGE_CREATED
+  ACTIVE
+}
+
+enum MetadataValidationStatus {
+  PENDING
+  VALID
+  INVALID
+}
+
+enum OrdinalInscriptionStatus {
+  PENDING
+  SUBMITTED
+  CONFIRMED
+  FAILED
+}
+
+enum SolanaBridgeStatus {
+  PENDING
+  MINTED
+  FAILED
+}
+
+enum JobType {
+  METADATA_VALIDATION
+  ARWEAVE_UPLOAD
+  ORDINAL_INSCRIPTION
+  SOLANA_BRIDGE_MINT
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+model User {
+  id         String   @id @default(uuid()) @db.Uuid
+  email      String   @unique
+  name       String
+  artworks   Artwork[]
+  job_runs   JobRun[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Artwork {
+  id                String                  @id @default(uuid()) @db.Uuid
+  title             String
+  artist            String
+  object_type       String
+  physical_location String
+  lifecycle_status  ArtworkLifecycleStatus  @default(DRAFT)
+  owner_user_id     String                  @db.Uuid
+  owner             User                    @relation(fields: [owner_user_id], references: [id], onDelete: Restrict)
+  metadata_records  ArtCubeMetadata[]
+  arweave_assets    ArweaveAsset[]
+  inscriptions      OrdinalInscription[]
+  bridge_token      SolanaBridgeToken?
+  job_runs          JobRun[]
+  created_at        DateTime                @default(now())
+  updated_at        DateTime                @updatedAt
+
+  @@index([owner_user_id])
+  @@index([lifecycle_status])
+}
+
+model ArtCubeMetadata {
+  id                String                   @id @default(uuid()) @db.Uuid
+  artwork_id        String                   @db.Uuid
+  artwork           Artwork                  @relation(fields: [artwork_id], references: [id], onDelete: Cascade)
+  metadata_json     Json
+  schema_version    String
+  validation_status MetadataValidationStatus @default(PENDING)
+  created_at        DateTime                 @default(now())
+  updated_at        DateTime                 @updatedAt
+
+  @@index([artwork_id])
+  @@index([validation_status])
+}
+
+model ArweaveAsset {
+  id           String   @id @default(uuid()) @db.Uuid
+  artwork_id   String   @db.Uuid
+  artwork      Artwork  @relation(fields: [artwork_id], references: [id], onDelete: Cascade)
+  arweave_uri  String   @unique
+  file_hash    String
+  asset_type   String
+  content_type String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@index([artwork_id])
+  @@index([asset_type])
+}
+
+model OrdinalInscription {
+  id             String                    @id @default(uuid()) @db.Uuid
+  artwork_id     String                    @db.Uuid
+  artwork        Artwork                   @relation(fields: [artwork_id], references: [id], onDelete: Cascade)
+  inscription_id String                    @unique
+  tx_id          String                    @unique
+  status         OrdinalInscriptionStatus  @default(PENDING)
+  submitted_at   DateTime?
+  confirmed_at   DateTime?
+  created_at     DateTime                  @default(now())
+  updated_at     DateTime                  @updatedAt
+
+  @@index([artwork_id])
+  @@index([status])
+}
+
+model SolanaBridgeToken {
+  id                         String             @id @default(uuid()) @db.Uuid
+  artwork_id                 String             @unique @db.Uuid
+  artwork                    Artwork            @relation(fields: [artwork_id], references: [id], onDelete: Cascade)
+  mint_address               String             @unique
+  parent_genesis_inscription String
+  status                     SolanaBridgeStatus @default(PENDING)
+  created_at                 DateTime           @default(now())
+  updated_at                 DateTime           @updatedAt
+
+  @@index([status])
+}
+
+model JobRun {
+  id            String    @id @default(uuid()) @db.Uuid
+  artwork_id     String?   @db.Uuid
+  artwork        Artwork?  @relation(fields: [artwork_id], references: [id], onDelete: SetNull)
+  created_by_id  String?   @db.Uuid
+  created_by     User?     @relation(fields: [created_by_id], references: [id], onDelete: SetNull)
+  job_type       JobType
+  status         JobStatus @default(QUEUED)
+  error_message  String?
+  started_at     DateTime?
+  finished_at    DateTime?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  @@index([artwork_id])
+  @@index([created_by_id])
+  @@index([job_type, status])
+}
